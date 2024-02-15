@@ -29,7 +29,7 @@ services:
     # Construit le service à partir du Dockerfile dans le répertoire courant
     build: .
     # Exécute une série de commandes pour installer les dépendances et exécuter les tests
-    command: sh -c "npm install && npm install --save-dev jest-junit && npm test -- --reporters=default --reporters=jest-junit"
+    command: sh -c "npm install && npm install --save-dev jest-junit && npm test --detectOpenHandles --reporters=default --reporters=jest-junit"
     # Lie ce service au service de base de données 'db'
     links:
       - db
