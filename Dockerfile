@@ -8,6 +8,9 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
+# Ajoutez cette ligne pour installer sinon
+RUN npm install --save-dev sinon
+
 # Copiez le reste du code de l'application
 COPY . .
 
