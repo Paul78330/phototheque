@@ -32,14 +32,14 @@ build:
 
 # Job 'test' pour exécuter les tests de l'application
 tests_unitaires:
-  stage: tests
+  stage: test
   script:
-    - docker-compose up --build --exit-code-from service_tests
+    - docker-compose up --build --exit-code-from test
   artifacts:
     reports:
-      junit: resultat_tests.xml
+      junit: test-results/resultat_tests.xml
     paths:
-      - resultat_tests.xml
+      - test-results/resultat_tests.xml
     when: always
 
 # Job 'debug_job' pour afficher des informations de débogage
