@@ -1,35 +1,40 @@
-# Spécifie la version de Docker Compose à utiliser
 version: '3'
-
-# Définit les services de votre application
 services:
-  # Le service 'app' est votre application Node.js
+  # Service pour l'application principale
   app:
-    # Construit l'image Docker pour l'application à partir du Dockerfile dans le répertoire courant (.)
+    # Construit le service à partir du Dockerfile dans le répertoire courant
     build: .
-    # Expose le port 8080 de l'application à l'hôte
+    # Expose le port 8080 du service
     ports:
       - "8080:8080"
-    # Crée un lien vers le service 'db' (MongoDB)
+    # Lie ce service au service de base de données 'db'
     links:
       - db
-    # Définit les variables d'environnement pour l'application
+    # Définit une variable d'environnement pour la connexion à la base de données
     environment:
-      # L'URL de la base de données MongoDB
       - DATABASE_URL=mongodb://db:27017/phototheque
 
-  # Le service 'db' est votre base de données MongoDB
+  # Service pour la base de données
   db:
     # Utilise l'image Docker 'mongo:latest' pour ce service
     image: mongo:latest
-    # Expose le port 27017 de MongoDB à l'hôte
+    # Expose le port 27017 du service
     ports:
       - "27017:27017"
 
-  test:  # Définit un nouveau service appelé "test".
-    build: .  # Construit l'image Docker à partir du Dockerfile dans le répertoire courant.
-    command: npm run test  # Exécute la commande "npm run test" lors du démarrage du service. Cela suppose que vous avez un script "test" dans votre fichier package.json qui lance vos tests.
-    links:  # Définit les liens vers d'autres services.
-      - db  # Lie ce service au service "db". Cela permet au service "test" de communiquer avec le service "db".
-    environment:  # Définit les variables d'environnement pour le service.
-      - DATABASE_URL=mongodb://db:27017/phototheque  # Définit la variable d'environnement "DATABASE_URL" pour le service. Cette URL est utilisée pour se connecter à la base de données MongoDB dans le service "db".
+  # Service pour exécuter les tests
+  test:
+    # Construit le service à partir du Dockerfile dans le répertoire courant
+    build: .
+    # Exécute une série de commandes pour installer les dépendances et exécuter les tests
+    command: sh -c "npm install && npm install --save-dev jest-junit && npm test -- --reporters=default --reporters=jest-junit"
+    # Lie ce service au service de base de données 'db'
+    links:
+      - db
+    # Définit une variable d'environnement pour la connexion à la base de données
+    environment:
+      - DATABASE_URL=mongodb://db:27017/phototheque
+    # Montage de volumes pour le code de l'application et les résultats des tests
+    volumes:
+      - .:/app
+      - ./test-results:/app/test-results

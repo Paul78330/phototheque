@@ -31,17 +31,16 @@ build:
       - ./
 
 # Job 'test' pour exécuter les tests de l'application
-test:
-  stage: test
+tests_unitaires:
+  stage: tests
   script:
-    - docker-compose up -d
-    - docker-compose exec app npm run test
-    - docker-compose down
-  # Conserve un rapport de test JUnit comme artefact
+    - docker-compose up --build --exit-code-from service_tests
   artifacts:
-    when: always
     reports:
-      junit: report.xml
+      junit: resultat_tests.xml
+    paths:
+      - resultat_tests.xml
+    when: always
 
 # Job 'debug_job' pour afficher des informations de débogage
 debug_job:

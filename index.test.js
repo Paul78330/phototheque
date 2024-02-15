@@ -54,9 +54,9 @@ describe('POST /album/create', () => {
 describe('GET /album/:id', () => {
   // Ce test vérifie que la route '/album/:id' renvoie le bon statut HTTP
   it('should render the album page', async () => {
-    const idAlbum = '6319f6485f88bcb86cd85d8e';
+    const idAlbum = '65ce545c9fb0faceda542e88'; // Utilisez l'ID spécifique ici
     const res = await request(app)
       .get(`/album/${idAlbum}`)
-      .expect(200);
+      .expect(200); // Nous nous attendons à un statut 200 si l'album existe
   });
 });
