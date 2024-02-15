@@ -108,3 +108,11 @@ Voici une brève description de ces concepts :
 ```
 docker-compose up --build test
 ```
+
+ou 
+
+```
+npm test
+```
+
+Pour exécuter vos tests avec Jest, vous pouvez utiliser la commande suivante dans votre terminal

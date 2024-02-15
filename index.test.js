@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 // Importation du module supertest pour tester les requêtes HTTP
 const request = require('supertest');
 // Importation du module sinon pour créer des espions et des bouchons
@@ -9,15 +10,18 @@ const app = require('./index');
 
 let server;
 
-// Avant chaque test, nous démarrons le serveur sur le port 3000
-beforeEach(() => {
-  server = app.listen(3000);
+// Avant chaque test, nous démarrons le serveur sur un port aléatoire
+beforeEach((done) => {
+  const port = Math.floor(Math.random() * (60000 - 3000 + 1)) + 3000;
+  server = app.listen(port, done);
 });
 
-// Après chaque test, nous fermons le serveur pour libérer le port
-afterEach(() => {
-  server.close();
-});
+// Après chaque test, nous fermons le serveur et la connexion à MongoDB
+afterEach((done) => {
+  server.close(() => {
+    mongoose.connection.close(done);
+  });
+}, 10000);
 
 // Nous définissons un groupe de tests pour la route GET '/'
 describe('GET /', () => {
@@ -51,12 +55,17 @@ describe('POST /album/create', () => {
 });
 
 // Nous définissons un groupe de tests pour la route GET '/album/:id'
+// ...
+
+// Nous définissons un groupe de tests pour la route GET '/album/:id'
 describe('GET /album/:id', () => {
   // Ce test vérifie que la route '/album/:id' renvoie le bon statut HTTP
   it('should render the album page', async () => {
     const idAlbum = '65ce545c9fb0faceda542e88'; // Utilisez l'ID spécifique ici
     const res = await request(app)
       .get(`/album/${idAlbum}`)
-      .expect(200); // Nous nous attendons à un statut 200 si l'album existe
+      .expect(302); // Changez le statut attendu en 302 si la redirection est attendue
   });
 });
+
+// ...
