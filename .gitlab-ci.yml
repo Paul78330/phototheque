@@ -1,0 +1,67 @@
+# Utilise l'image Docker 'docker/compose:latest' pour exécuter les jobs de ce pipeline
+image: docker/compose:latest
+
+# Utilise le service 'docker:dind' (Docker in Docker) pour permettre l'exécution de Docker à l'intérieur des jobs
+services:
+  - docker:dind
+
+# Définit les étapes du pipeline
+stages:
+  - build
+  - test
+  - debug
+
+# Définit des variables d'environnement pour Docker
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+# Exécute 'docker info' avant chaque job pour afficher des informations sur l'environnement Docker
+before_script:
+  - docker info
+
+# Job 'build' pour construire les images Docker de l'application
+build:
+  stage: build
+  script:
+    - docker-compose build
+  # Conserve l'ensemble du répertoire de travail comme artefact pour les jobs suivants
+  artifacts:
+    paths:
+      - ./
+
+# Job 'test' pour exécuter les tests de l'application
+test:
+  stage: test
+  script:
+    - docker-compose up -d
+    - docker-compose exec app npm run test
+    - docker-compose down
+  # Conserve un rapport de test JUnit comme artefact
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
+# Job 'debug_job' pour afficher des informations de débogage
+debug_job:
+  stage: debug
+  script:
+    - echo "Debug information:"
+    - docker-compose config
+    - docker-compose ps
+    - docker-compose logs
+  # Exécute ce job uniquement sur les branches autres que 'master'
+  only:
+    - branches
+  except:
+    - master
+
+# Path: docker-compose.ymlDans ce fichier .gitlab-ci.yml, l'image Docker utilisée est docker/compose:latest pour permettre l'utilisation de Docker Compose.
+
+# L'étape build construit les services définis dans docker-compose.yml et conserve l'ensemble du répertoire de travail comme artefact pour les jobs suivants.
+
+# L'étape test démarre les services avec docker-compose up -d, exécute les tests avec docker-compose exec app npm run test, puis arrête les services avec docker-compose down. Elle génère également un rapport de test JUnit qui est conservé comme artefact.
+
+# Le job debug_job affiche des informations de débogage sur la configuration de Docker Compose, l'état des services et les logs. Il s'exécute uniquement sur les branches autres que master.
+

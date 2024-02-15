@@ -45,3 +45,5 @@ docker-compose -v
 ```
 
 8-Editer le fichier de configuration de l'infrastructure docker-compose.yml puis commit et pousser vers gitLab
+
+9- Editer le fichier .gitlab-ci.yml
