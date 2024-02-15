@@ -17,8 +17,9 @@ afterAll((done) => {
   });
 }, 10000);
 
-afterEach(() => {
+afterEach(async () => {
   sinon.restore();
+  await mongoose.connection.close();
 });
 
 describe('GET /', () => {
