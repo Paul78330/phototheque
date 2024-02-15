@@ -13,6 +13,8 @@ services:
     # Définit une variable d'environnement pour la connexion à la base de données
     environment:
       - DATABASE_URL=mongodb://db:27017/phototheque
+    # Ajoutez cette ligne pour lancer node index.js lorsque le service est démarré
+    command: node index.js
 
   # Service pour la base de données
   db:
