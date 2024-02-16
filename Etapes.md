@@ -149,72 +149,30 @@ C'est là qu'intervient `jest-junit`. Lorsque vous utilisez `jest-junit`, Jest g
 
 En résumé, `jest-junit` est utile si vous souhaitez intégrer vos tests Jest dans un pipeline de CI/CD et obtenir des rapports de test détaillés.
 
-[Comment puis-je configurer Jest pour utiliser le reporter jest-junit ?]()
-
-* []()
-* []()
-
-[Etapes.md]()
-
-* []()
-
-[sample_spec.js]()
-
-* []()
-
-[.gitlab-ci.yml]()
-
-* []()
-
-[package.json]()
-
-* []()
-
-[index.test.js]()
-
-* []()
-
-[albumRoutes.test.js]()
-
-* []()
-
-[albums_routes.js]()
-
-* []()
-
-[docker-compose.yml]()
-
-* []()
-
-[Dockerfile]()
-
-* []()
-
-[index.js]()
-
-* []()
-* []()
-* []( "Plus d'actions...")
-
-[Etapes.md]()
-
-* [PROBLÈMES]()
-* [TERMINAL]()
-* [SORTIE]()
-* [PORTS]()
-* [bash]()
-* []()
-  []( "Lancement de profil...")
-* []()
-* []()
-* []( "Vues et autres actions...")
-* []()
-* []()
-
-
-
-
-
 c) Ajouter le job test_integration à .gitlab-ci.yml
 
 d) Ajouter le test à script dans package.json
+
+16- Mettons maintenant en place un test E2E
+
+a) Installer cypress
+
+```
+npm install --save-dev cypress
+```
+
+b) créer un fichier cypress/e2e/test.cy.js
+
+c) éditer le fichier cypress.json
+
+d) tester votre intégration en local
+
+```
+npx cypress open
+```
+
+Cypress va prendre le relais et faire le test pour nous
+
+(lancer le server node au préalable)
+
+![1708082722544](image/Etapes/1708082722544.png)

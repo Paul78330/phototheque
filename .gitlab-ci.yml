@@ -30,7 +30,7 @@ build:
     paths:
       - ./
 
-# Job 'test' pour exécuter les tests de l'application
+# Job 'tests_unitaires' pour exécuter les tests unitaires de l'application
 tests_unitaires:
   stage: test
   script:
@@ -40,6 +40,33 @@ tests_unitaires:
       junit: test-results/resultat_tests.xml
     paths:
       - test-results/resultat_tests.xml
+    when: always
+
+# Job 'tests_integration' pour exécuter les tests d'intégration de l'application
+tests_integration:
+  stage: test
+  script:
+    - docker-compose up -d app
+    - docker-compose run -T app npm run test:integration
+    - docker-compose down
+  artifacts:
+    reports:
+      junit: integration-test-results/resultat_tests_integration.xml
+    paths:
+      - integration-test-results/resultat_tests_integration.xml
+    when: always
+
+# Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
+tests_e2e:
+  stage: test
+  script:
+    - docker-compose up -d app
+    - docker-compose run -T app npx cypress run
+    - docker-compose down
+  artifacts:
+    paths:
+      - cypress/videos/*
+      - cypress/screenshots/*
     when: always
 
 # Job 'debug_job' pour afficher des informations de débogage
@@ -56,24 +83,15 @@ debug_job:
   except:
     - master
 
-tests_integration:
-  stage: test
-  script:
-    - docker-compose up -d app
-    - docker-compose run -T app npm run test:integration
-    - docker-compose down
-  artifacts:
-    reports:
-      junit: integration-test-results/resultat_tests_integration.xml
-    paths:
-      - integration-test-results/resultat_tests_integration.xml
-    when: always
-
-# Path: docker-compose.ymlDans ce fichier .gitlab-ci.yml, l'image Docker utilisée est docker/compose:latest pour permettre l'utilisation de Docker Compose.
-
-# L'étape build construit les services définis dans docker-compose.yml et conserve l'ensemble du répertoire de travail comme artefact pour les jobs suivants.
-
-# L'étape test démarre les services avec docker-compose up -d, exécute les tests avec docker-compose exec app npm run test, puis arrête les services avec docker-compose down. Elle génère également un rapport de test JUnit qui est conservé comme artefact.
-
-# Le job debug_job affiche des informations de débogage sur la configuration de Docker Compose, l'état des services et les logs. Il s'exécute uniquement sur les branches autres que master.
-
+# docker-compose down: Cette commande arrête et supprime les conteneurs, réseaux et volumes définis dans votre fichier docker-compose.yml.
+# artifacts: Ce sont les fichiers qui sont conservés après l'exécution de ce job.
+# paths: C'est la liste des chemins des fichiers à conserver. Ici, nous conservons les vidéos et les captures d'écran générées par Cypress lors de l'exécution des tests.
+# when: always: Cela signifie que les artefacts sont toujours conservés, même si le job échoue.
+# debug_job: C'est le nom du job dans votre pipeline GitLab CI/CD.
+# stage: debug: Cela signifie que ce job est exécuté pendant l'étape debug de votre pipeline.
+# script: Ce sont les commandes qui sont exécutées pour ce job.
+# echo "Debug information:": Cette commande affiche le texte "Debug information:" dans la sortie du job.
+# docker-compose config: Cette commande affiche votre configuration Docker Compose.
+# docker-compose ps: Cette commande affiche l'état des services définis dans votre fichier docker-compose.yml.
+# docker-compose logs: Cette commande affiche les logs des services définis dans votre fichier docker-compose.yml.
+# only et except: Ces deux clés définissent les règles pour déterminer quand ce job doit être exécuté. Ici, le job debug_job est exécuté uniquement sur les branches autres que master.
