@@ -60,7 +60,11 @@ tests_integration:
   stage: test
   script:
     - docker-compose up -d app
+<<<<<<< HEAD
     - docker-compose run -T app npm run test:integration
+=======
+    - docker-compose exec app npm run test:integration
+>>>>>>> 02d566f84ed3750a66a396302df0722009d82e12
     - docker-compose down
   artifacts:
     reports:
