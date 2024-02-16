@@ -56,6 +56,19 @@ debug_job:
   except:
     - master
 
+tests_integration:
+  stage: test
+  script:
+    - docker-compose up -d app
+    - docker-compose exec app npm run test:integration
+    - docker-compose down
+  artifacts:
+    reports:
+      junit: integration-test-results/resultat_tests_integration.xml
+    paths:
+      - integration-test-results/resultat_tests_integration.xml
+    when: always
+
 # Path: docker-compose.ymlDans ce fichier .gitlab-ci.yml, l'image Docker utilisée est docker/compose:latest pour permettre l'utilisation de Docker Compose.
 
 # L'étape build construit les services définis dans docker-compose.yml et conserve l'ensemble du répertoire de travail comme artefact pour les jobs suivants.

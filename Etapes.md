@@ -109,10 +109,32 @@ Voici une brève description de ces concepts :
 docker-compose up --build test
 ```
 
-ou 
+ou
 
 ```
 npm test
 ```
 
 Pour exécuter vos tests avec Jest, vous pouvez utiliser la commande suivante dans votre terminal
+
+16 - Pour les test d'intégration et E2E (bout à bout)
+
+Un test d'intégration est un type de test qui vérifie si différents modules ou services de votre application fonctionnent correctement ensemble. Contrairement aux tests unitaires, qui testent des parties individuelles de votre code en isolation, les tests d'intégration testent l'interaction entre différentes parties de votre code.
+
+Par exemple, dans une application web, un test d'intégration pourrait tester le processus complet de connexion d'un utilisateur, y compris l'envoi d'une requête HTTP à l'API de l'application, la vérification des informations d'identification de l'utilisateur dans la base de données, et la réponse de l'API avec un jeton de session.
+
+   a) installer portfinder
+
+```
+npm install portfinder
+```
+
+Le module `portfinder` est une bibliothèque Node.js qui fournit des outils pour rechercher un port réseau ouvert sur votre machine locale. Il est souvent utilisé dans les situations où vous avez besoin de démarrer un serveur sur un port spécifique, mais vous ne savez pas quels ports sont actuellement disponibles.
+
+Dans le contexte de vos tests, `portfinder` est utilisé pour trouver un port ouvert avant de démarrer votre serveur Express. Cela permet d'éviter les conflits de port si vous avez d'autres services en cours d'exécution sur votre machine qui pourraient utiliser le même port.
+
+b) Dans test/albumRoutes.js éditer les tests d'intégrations de nos routes
+
+c) Ajouter le job test_integration à .gitlab-ci.yml
+
+d) Ajouter le test à script dans package.json
