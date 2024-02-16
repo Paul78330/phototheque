@@ -44,7 +44,7 @@ git push --set-upstream origin main
 docker-compose -v
 ```
 
-8-Editer le fichier de configuration de l'infrastructure docker-compose.yml puis commit et pousser vers gitLab
+8-Editer le fichier de configuration de l'infrastructure docker-compose.yml et un Dockerfile puis commit et pousser vers gitLab
 
 9-Vérifier que docker est bien lancé
 
