@@ -57,8 +57,26 @@ app.use((req, res) => {
   res.send("Page non trouvée");
 });
 
-app.listen(3000, () => {
-  console.log("Application lancée sur le port 3000");
-});
 
-module.exports = app;
+let server;
+
+function startServer() {
+  server = app.listen(3000, () => {
+    console.log('Application lancée sur le port 3000');
+  });
+  return server;
+}
+
+function stopServer(callback) {
+  if (server) {
+    server.close(callback);
+  }
+}
+
+// Si index.js est exécuté directement, nous démarrons le serveur
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { app, startServer, stopServer };
+
