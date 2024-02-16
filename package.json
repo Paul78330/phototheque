@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles",
+    "test:integration": "jest integration-tests --reporters=default --reporters=jest-junit",
     "test:watch": "jest --watch",
     "test:unit": "jest --verbose",
     "start": "node index.js"
@@ -18,6 +19,7 @@
     "express-fileupload": "^1.4.0",
     "express-session": "^1.17.3",
     "mongoose": "^6.5.4",
+    "portfinder": "^1.0.32",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
