@@ -47,11 +47,19 @@ describe('POST /album/create', () => {
   });
 });
 
+
+
+let idAlbum;
+
+beforeEach(async () => {
+  const album = new Album({ title: 'Test Album' });
+  await album.save();
+  idAlbum = album._id;
+});
 // Test de la route GET /album/:id
 describe('GET /album/:id', () => {
-  it('should render the album page', async () => {
-    const idAlbum = '65ce545c9fb0faceda542e88';
-    return request(app) // Retour de la promesse
+  it('should render the album page', () => {
+    return request(app)
       .get(`/album/${idAlbum}`)
       .expect(200);
   });
