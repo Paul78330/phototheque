@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="4" failures="0" errors="0" time="15.506">
+  <testsuite name="GET /" errors="0" failures="0" skipped="0" timestamp="2024-02-16T10:45:43" time="4.211" tests="3">
+    <testcase classname="GET / should redirect to /albums" name="GET / should redirect to /albums" time="0.125">
+    </testcase>
+    <testcase classname="POST /album/create should create a new album" name="POST /album/create should create a new album" time="0.046">
+    </testcase>
+    <testcase classname="GET /album/:id should render the album page" name="GET /album/:id should render the album page" time="0.061">
+    </testcase>
+  </testsuite>
+  <testsuite name="Album routes" errors="0" failures="0" skipped="0" timestamp="2024-02-16T10:45:43" time="14.127" tests="1">
+    <testcase classname="Album routes should create a new album" name="Album routes should create a new album" time="10.653">
+    </testcase>
+  </testsuite>
+</testsuites>

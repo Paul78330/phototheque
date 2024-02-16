@@ -135,6 +135,86 @@ Dans le contexte de vos tests, `portfinder` est utilisé pour trouver un port ou
 
 b) Dans test/albumRoutes.js éditer les tests d'intégrations de nos routes
 
+installer jest-junit
+
+```
+npm install --save-dev jest-junit
+```
+
+`jest-junit` est un reporter personnalisé pour Jest qui génère des rapports de test au format JUnit. JUnit est un format de rapport standard utilisé par de nombreux outils de CI/CD (Intégration Continue / Déploiement Continu), y compris Jenkins, CircleCI et GitLab CI/CD.
+
+Lorsque vous exécutez vos tests avec Jest, Jest génère un rapport de test qui résume les résultats de vos tests. Par défaut, Jest génère un rapport de test dans un format lisible par l'homme. Cependant, ce format n'est pas idéal pour l'analyse automatisée des résultats des tests.
+
+C'est là qu'intervient `jest-junit`. Lorsque vous utilisez `jest-junit`, Jest génère un rapport de test au format JUnit. Le format JUnit est un format XML standard qui peut être analysé par de nombreux outils de CI/CD. Cela permet à ces outils de comprendre les résultats de vos tests et de fournir des informations détaillées sur les tests qui ont réussi et ceux qui ont échoué.
+
+En résumé, `jest-junit` est utile si vous souhaitez intégrer vos tests Jest dans un pipeline de CI/CD et obtenir des rapports de test détaillés.
+
+[Comment puis-je configurer Jest pour utiliser le reporter jest-junit ?]()
+
+* []()
+* []()
+
+[Etapes.md]()
+
+* []()
+
+[sample_spec.js]()
+
+* []()
+
+[.gitlab-ci.yml]()
+
+* []()
+
+[package.json]()
+
+* []()
+
+[index.test.js]()
+
+* []()
+
+[albumRoutes.test.js]()
+
+* []()
+
+[albums_routes.js]()
+
+* []()
+
+[docker-compose.yml]()
+
+* []()
+
+[Dockerfile]()
+
+* []()
+
+[index.js]()
+
+* []()
+* []()
+* []( "Plus d'actions...")
+
+[Etapes.md]()
+
+* [PROBLÈMES]()
+* [TERMINAL]()
+* [SORTIE]()
+* [PORTS]()
+* [bash]()
+* []()
+  []( "Lancement de profil...")
+* []()
+* []()
+* []( "Vues et autres actions...")
+* []()
+* []()
+
+
+
+
+
 c) Ajouter le job test_integration à .gitlab-ci.yml
 
 d) Ajouter le test à script dans package.json

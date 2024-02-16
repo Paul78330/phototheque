@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles",
-    "test:integration": "jest integration-tests --reporters=default --reporters=jest-junit",
+    "test:integration": "jest test --reporters=default --reporters=jest-junit",
     "test:watch": "jest --watch",
     "test:unit": "jest --verbose",
     "start": "node index.js"
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
     "sinon": "^17.0.1",
     "supertest": "^6.3.4"
   }
