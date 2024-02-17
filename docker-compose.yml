@@ -40,3 +40,18 @@ services:
     volumes:
       - .:/app
       - ./test-results:/app/test-results
+
+  # Service pour exécuter les tests Cypress
+  cypress:
+    # Utilise l'image Docker 'cypress/browsers:node14.17.0-chrome88-ff89' pour ce service
+    image: 'cypress/browsers:node14.17.0-chrome88-ff89'
+    # Ce service dépend du service 'app', il ne sera donc pas démarré tant que le service 'app' n'est pas prêt
+    depends_on:
+      - app
+    # Montage de volumes pour le code de l'application et les tests Cypress
+    volumes:
+      - ./:/e2e
+    # Définit le répertoire de travail dans le conteneur
+    working_dir: /e2e
+    # Exécute une série de commandes pour installer les dépendances et exécuter les tests Cypress
+    command: /bin/bash -c "npm install && npx cypress run"

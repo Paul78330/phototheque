@@ -15,7 +15,7 @@ describe('Test E2E de l\'application Album', () => {
 
   it('Crée un nouvel album et vérifie qu\'il est affiché', () => {
     // Visite la page de création d'un nouvel album
-    cy.visit('http://localhost:3000/album/create')
+    cy.visit('http://app:8080/album/create')
 
     // Remplit le formulaire avec le titre de l'album
     cy.get('input[name="albumTitle"]').type('Mon nouvel album')
@@ -24,7 +24,7 @@ describe('Test E2E de l\'application Album', () => {
     cy.get('button[type="submit"]').click()
 
     // Vérifie que l'album a bien été créé en vérifiant qu'il est affiché sur la page des albums
-    cy.visit('http://localhost:3000/albums')
+    cy.visit('http://app:8080:3000/albums')
     cy.get('a').contains('Mon nouvel album').should('exist')
   })
 })
