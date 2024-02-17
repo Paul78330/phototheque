@@ -71,6 +71,7 @@ tests_e2e:
 
 # Job 'debug_job' pour afficher des informations de débogage
 debug_job:
+  image: cypress/included:13.6.4
   stage: debug
   script:
     - echo "Debug information:"
