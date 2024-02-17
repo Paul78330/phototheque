@@ -68,7 +68,7 @@ tests_e2e:
     # Le répertoire de travail dans le conteneur est défini comme '/e2e'
     # À l'intérieur du conteneur, 'npm install' est exécuté pour installer les dépendances du projet
     # Ensuite, 'npx cypress run' est exécuté pour lancer les tests Cypress
-    - docker run -v $PWD:/e2e -w /e2e cypress/browsers:node12.18.3-chrome87-ff82 /bin/bash -c "npm install && npx cypress run --spec cypress/e2e/test.cy.js"
+    - docker run -v $PWD:/e2e -w /e2e cypress/browsers:node14.17.0-chrome88-ff89 /bin/bash -c "npm install && npx cypress run"
     # Arrête l'application
     - docker-compose down
   # Les artefacts de ce job
@@ -78,6 +78,7 @@ tests_e2e:
     paths:
       - cypress/videos/*
       - cypress/screenshots/*
+      - download/*
     # Les artefacts sont toujours sauvegardés, même si le job échoue
     when: always
 
