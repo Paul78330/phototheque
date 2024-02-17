@@ -4,4 +4,5 @@ module.exports = {
       // implement node event listeners here
     },
   },
+  integrationFolder: "cypress/e2e"
 };
