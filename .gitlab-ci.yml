@@ -58,21 +58,9 @@ tests_integration:
 
 # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
 tests_e2e:
-  image: cypress/browsers:node12.18.3-chrome87-ff82
   stage: test
   script:
-    - npm install
-    - npx cypress run
-  artifacts:
-    paths:
-      - cypress/videos/*
-      - cypress/screenshots/*
-    when: always
-  stage: test
-  script:
-    - docker-compose up -d app
-    - docker-compose run -T app npx cypress run
-    - docker-compose down
+    - docker run -v $PWD:/e2e -w /e2e cypress/browsers:node12.18.3-chrome87-ff82 /bin/bash -c "npm install && npx cypress run"
   artifacts:
     paths:
       - cypress/videos/*
