@@ -58,6 +58,16 @@ tests_integration:
 
 # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
 tests_e2e:
+  image: cypress/browsers:node12.18.3-chrome87-ff82
+  stage: test
+  script:
+    - npm install
+    - npx cypress run
+  artifacts:
+    paths:
+      - cypress/videos/*
+      - cypress/screenshots/*
+    when: always
   stage: test
   script:
     - docker-compose up -d app
@@ -71,6 +81,7 @@ tests_e2e:
 
 # Job 'debug_job' pour afficher des informations de débogage
 debug_job:
+  image: cypress/included:13.6.4
   stage: debug
   script:
     - echo "Debug information:"
