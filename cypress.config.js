@@ -8,4 +8,5 @@ module.exports = {
     // Ici, il est configuré pour rechercher tous les fichiers .cy.js dans le répertoire cypress/e2e et ses sous-répertoires.
     specPattern: "cypress/e2e/**/*.cy.js",
   },
+  integrationFolder: "cypress/e2e"
 };
