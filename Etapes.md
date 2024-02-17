@@ -176,3 +176,9 @@ Cypress va prendre le relais et faire le test pour nous
 (lancer le server node au préalable)
 
 ![1708082722544](image/Etapes/1708082722544.png)
+
+e) tester en local 
+
+```
+npx cypress run cypress/e2e/test.cy.js
+```
