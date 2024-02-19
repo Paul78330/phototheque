@@ -1,57 +1,52 @@
 version: '3'
 services:
-  # Service pour l'application principale
   app:
-    # Construit le service à partir du Dockerfile dans le répertoire courant
     build: .
-    # Expose le port 8080 du service
     ports:
-      - "8080:8080"
-    # Lie ce service au service de base de données 'db'
+      - "3000:3000"
     links:
       - db
-    # Définit une variable d'environnement pour la connexion à la base de données
     environment:
       - DATABASE_URL=mongodb://db:27017/phototheque
-    # Ajoutez cette ligne pour lancer node index.js lorsque le service est démarré
-    command: node index.js
+    command: ["node", "index.js"]
+    depends_on:
+      - db
 
-  # Service pour la base de données
   db:
-    # Utilise l'image Docker 'mongo:latest' pour ce service
     image: mongo:latest
-    # Expose le port 27017 du service
     ports:
-      - "27017:27017"
+      - "27018:27017"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 1m
+      timeout: 30s
+      retries: 30
 
-  # Service pour exécuter les tests
   test:
-    # Construit le service à partir du Dockerfile dans le répertoire courant
     build: .
-    # Exécute une série de commandes pour installer les dépendances et exécuter les tests
     command: sh -c "npm install && npm install --save-dev jest-junit && npm test --detectOpenHandles --reporters=default --reporters=jest-junit"
-    # Lie ce service au service de base de données 'db'
     links:
       - db
-    # Définit une variable d'environnement pour la connexion à la base de données
     environment:
       - DATABASE_URL=mongodb://db:27017/phototheque
-    # Montage de volumes pour le code de l'application et les résultats des tests
     volumes:
       - .:/app
       - ./test-results:/app/test-results
-
-  # Service pour exécuter les tests Cypress
-  cypress:
-    # Utilise l'image Docker 'cypress/browsers:node14.17.0-chrome88-ff89' pour ce service
-    image: 'cypress/browsers:node14.17.0-chrome88-ff89'
-    # Ce service dépend du service 'app', il ne sera donc pas démarré tant que le service 'app' n'est pas prêt
     depends_on:
-      - app
-    # Montage de volumes pour le code de l'application et les tests Cypress
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
+
+  cypress:
+    image: 'cypress/browsers:node14.17.0-chrome88-ff89'
+    depends_on:
+      app:
+        condition: service_started
+      db:
+        condition: service_healthy
     volumes:
       - ./:/e2e
-    # Définit le répertoire de travail dans le conteneur
     working_dir: /e2e
-    # Exécute une série de commandes pour installer les dépendances et exécuter les tests Cypress
     command: /bin/bash -c "npm install && npx cypress run"
+    network_mode: "service:app"

@@ -177,8 +177,32 @@ Cypress va prendre le relais et faire le test pour nous
 
 ![1708082722544](image/Etapes/1708082722544.png)
 
-e) tester en local 
+e) tester en local
+
+Si nous souhaitons supprimer toutes les images, vider la cache Docker afin de les réconstruire
 
 ```
-npx cypress run cypress/e2e/test.cy.js
+docker system prune -a
 ```
+
+* redemarrer les Docker desktop
+* Nous pouvons ensuite reconstruire et demarrer le service app
+
+```
+docker-compose up --build app
+```
+
+* Pour lancer notre test cypress avec notre container cypress depuis docker
+
+  ```
+  docker run --network=host -it -v //c/dev_web/DEVOPS/devOps_project/node_project:/e2e -w //e2e cypress/included:6.0.0
+  ```
+* `--network=host` : Cela fait en sorte que le conteneur utilise le réseau de l'hôte. C'est utile lorsque vous voulez que le conteneur communique avec d'autres services sur le même hôte.
+* `-it` : Cela signifie que Docker doit allouer un pseudo-TTY et garder l'entrée standard ouverte. C'est utile lorsque vous voulez interagir avec le conteneur.
+* `-v //c/dev_web/DEVOPS/devOps_project/node_project:/e2e` : Cela mappe le répertoire `//c/dev_web/DEVOPS/devOps_project/node_project` sur votre machine hôte au répertoire `/e2e` dans le conteneur. C'est utile lorsque vous voulez que le conteneur ait accès aux fichiers sur votre machine hôte.
+* `-w //e2e` : Cela définit le répertoire de travail dans le conteneur à `/e2e`. C'est utile lorsque vous voulez que les commandes exécutées dans le conteneur soient exécutées dans ce répertoire.
+* `cypress/included:6.0.0` : C'est l'image Docker que vous voulez exécuter. Dans ce cas, c'est l'image `cypress/included` avec la balise `6.0.0`.
+
+Si jamais votre build ne fonctionne pas, cela pourrais être du au poid de votre fichier, pour l'alléger, vous pouvez éditer un fichier .dockerignore
+
+![1708287495232](image/Etapes/1708287495232.png)

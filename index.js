@@ -14,8 +14,10 @@ const flash = require("connect-flash");
 const albumRoutes = require("./routes/albums_routes");
 
 //3 - connexion à notre bdd pour la création de notre collection "album"
-const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/phototheque';
-mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/phototheque';
+mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch((error) => console.error('Erreur de connexion à MongoDB:', error));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

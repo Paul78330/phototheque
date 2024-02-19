@@ -8,7 +8,8 @@
     "test:integration": "jest test --reporters=default --reporters=jest-junit",
     "test:watch": "jest --watch",
     "test:unit": "jest --verbose",
-    "start": "node index.js"
+    "start": "node index.js",
+    "cypress:open": "cypress open"
   },
   "author": "",
   "license": "ISC",

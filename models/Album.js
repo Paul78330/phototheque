@@ -6,4 +6,8 @@ const albumSchema = new mongoose.Schema({
 }, 
 { timestamps: true});
 
+// Ajout de l'indexation sur le champ 'title'
+albumSchema.index({ title: 1 });
+
+
 module.exports = mongoose.model('Album', albumSchema);

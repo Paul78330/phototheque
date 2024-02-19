@@ -17,37 +17,23 @@ const createAlbumForm = (req, res) => {
 };
 
 const createAlbum = async (req, res) => {
-  //1
-  //console.log(req.body);
-  //res.send('ok');
-
-  //2
-  //Apres importation du model dans ce fichier
-  // await Album.create({
-  //     title: req.body.albumTitle,
-  // })
-  //3
-  //gestion des erreurs : passer par try catch
+  let album;
+  
   try {
-    await Album.create({
+    album = await Album.create({
       title: req.body.albumTitle,
     });
-
-    // res.redirect('/')
-
-    //5 - après gestion album.ejs
-    res.redirect("/albums");
   } catch (err) {
-    // console.log(err);
-
-    //D'abord installer et parametrer connect-flash
     req.flash("error", "Erreur lors de la création de l'album");
-
-    res.redirect("/album/create");
+    return res.redirect("/album/create");
   }
 
-  //Decommenter jusqu'à 3
-  // res.redirect('/')
+  try {
+    res.redirect("/albums");
+  } catch (err) {
+    req.flash("error", "Erreur lors de la redirection vers la page des albums");
+    return res.redirect("/album/create");
+  }
 };
 
 //4 - gestion de ma route '/albums';
@@ -59,7 +45,7 @@ const createAlbum = async (req, res) => {
 
 //5 - liaison views + bdd
 const albums = async (req, res) => {
-  const albums = await Album.find();
+  const albums = await Album.find().select("title images");
   console.log(albums);
 
   res.render("albums", {
@@ -79,7 +65,7 @@ const album = async (req, res) => {
 
   try {
     const idAlbum = req.params.id;
-    const album = await Album.findById(idAlbum);
+    const album = await Album.findById(idAlbum).select("title images");
 
     console.log(album);
 

@@ -1,0 +1,7 @@
+{
+  "testFiles": "cypress/e2e/**/*.cy.js",
+  "baseUrl": "http://localhost:3000",
+  "video": true,
+  "screenshotOnRunFailure": true,
+  "defaultCommandTimeout": 10000
+}
