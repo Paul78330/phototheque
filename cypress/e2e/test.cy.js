@@ -1,7 +1,7 @@
 // Définition de la suite de tests
 describe('Test E2E de l\'application Album', () => {
   // Définition de l'URL du serveur comme variable pour faciliter les modifications futures
-  const serverUrl = Cypress.env('CYPRESS_SERVER_URL') || 'http://localhost:8080';
+  const serverUrl = Cypress.env('CYPRESS_SERVER_URL') || 'http://localhost:3000';
 
   // Avant la suite de tests, vérifie que le serveur est en cours d'exécution
   // Utilisation de 'before' au lieu de 'beforeEach' car cette vérification n'a besoin d'être faite qu'une seule fois

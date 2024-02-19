@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   app:
     build: .
@@ -37,12 +37,13 @@ services:
       - app
 
   cypress:
-    image: 'cypress/browsers:node14.17.0-chrome88-ff89'
+    image: "cypress/browsers:node14.17.0-chrome88-ff89"
     depends_on:
       - app
       - db
     volumes:
       - ./:/e2e
     working_dir: /e2e
-    command: /bin/bash -c "export CYPRESS_SERVER_URL=http://app:3000 && npm install cypress -g && cypress verify && npx cypress run"
-    network_mode: "service:app"
+    command: /bin/bash -c "export CYPRESS_SERVER_URL=http://app:3000 && cypress verify && npx cypress run"
+    networks:
+      - albums-app-network
