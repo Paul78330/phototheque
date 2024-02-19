@@ -5,6 +5,12 @@ const sinon = require('sinon');
 const Album = require('./models/Album');
 const { app, startServer, stopServer } = require('./index');
 
+//3 - connexion à notre bdd pour la création de notre collection "album"
+const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/phototheque';
+mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch((error) => console.error('Erreur de connexion à MongoDB:', error));
+
 let server;
 // Avant tous les tests, nous démarrons le serveur
 beforeAll(async () => {
