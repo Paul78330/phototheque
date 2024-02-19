@@ -15,7 +15,7 @@ services:
   db:
     image: mongo:latest
     ports:
-      - "27018:27017"
+      - "27017:27017"
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 1m
@@ -48,5 +48,5 @@ services:
     volumes:
       - ./:/e2e
     working_dir: /e2e
-    command: /bin/bash -c "npm install && npx cypress run"
+    command: /bin/bash -c "export CYPRESS_SERVER_URL=http://app:3000 && npm install cypress -g && cypress verify && npx cypress run"
     network_mode: "service:app"
