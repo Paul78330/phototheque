@@ -59,22 +59,17 @@ tests_integration:
 # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
 tests_e2e:
   stage: test
-  # Les commandes à exécuter pour ce job
   script:
+    - DOCKERIZE_VERSION=v0.6.1 && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && chmod +x /usr/local/bin/dockerize && export PATH=$PATH:/usr/local/bin
     - docker-compose up -d app
-    - echo $PATH
-    - ls /usr/local/bin
     - dockerize -wait tcp://app:3000 -timeout 1m
     - docker-compose up cypress
     - docker-compose down
   artifacts:
-    # Les chemins des artefacts à sauvegarder
-    # Ici, ce sont les vidéos et les captures d'écran générées par Cypress
     paths:
       - cypress/videos/*
       - cypress/screenshots/*
       - download/*
-    # Les artefacts sont toujours sauvegardés, même si le job échoue
     when: always
 
 # Job 'debug_job' pour afficher des informations de débogage
