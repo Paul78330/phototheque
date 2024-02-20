@@ -11,8 +11,6 @@ services:
     command: ["node", "index.js"]
     depends_on:
       - db
-    networks:
-      - albums-app-network
 
   db:
     image: mongo:latest
@@ -23,11 +21,30 @@ services:
       interval: 1m
       timeout: 30s
       retries: 30
-    networks:
-      - albums-app-network
 
-  # Ajoutez le réseau aux autres services de la même manière...
+  test:
+    build: .
+    command: sh -c "npm install && npm install --save-dev jest-junit && npm test --detectOpenHandles --reporters=default --reporters=jest-junit"
+    links:
+      - db
+    environment:
+      - DATABASE_URL=mongodb://db:27017/phototheque
+    volumes:
+      - .:/app
+      - ./test-results:/app/test-results
+    depends_on:
+      - db
+      - app
 
+  cypress:
+    image: "cypress/browsers:node14.17.0-chrome88-ff89"
+    depends_on:
+      - app
+      - db
+    volumes:
+      - ./:/e2e
+    working_dir: /e2e
+    command: /bin/bash -c "export CYPRESS_SERVER_URL=http://app:3000 && cypress verify && npx cypress run"
 networks:
   albums-app-network:
     external: true
