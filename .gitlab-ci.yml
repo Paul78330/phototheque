@@ -62,6 +62,8 @@ tests_e2e:
   # Les commandes à exécuter pour ce job
   script:
     - docker-compose up -d app
+    - echo $PATH
+    - ls /usr/local/bin
     - dockerize -wait tcp://app:3000 -timeout 1m
     - docker-compose up cypress
     - docker-compose down
