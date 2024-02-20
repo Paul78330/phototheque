@@ -62,7 +62,7 @@ tests_e2e:
   script:
     - DOCKERIZE_VERSION=v0.6.1 && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && chmod +x /usr/local/bin/dockerize && export PATH=$PATH:/usr/local/bin
     - docker-compose up -d app
-    - dockerize -wait tcp://app:3000 -timeout 1m
+    - dockerize -wait tcp://app:3000 -timeout 5m
     - docker-compose up cypress
     - docker-compose down
   artifacts:
