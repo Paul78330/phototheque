@@ -1,0 +1,17 @@
+# Utilisez une image de base avec Node.js et les navigateurs nécessaires pour Cypress
+FROM cypress/browsers:node14.17.0-chrome88-ff89
+
+# Créez un répertoire pour l'application
+WORKDIR /usr/src/app
+
+# Copiez package.json et package-lock.json (si disponible)
+COPY package*.json ./
+
+# Installez les dépendances de l'application
+RUN npm install
+
+# Installez Cypress
+RUN npm install cypress --save-dev
+
+# Copiez le reste du code de l'application
+COPY . .

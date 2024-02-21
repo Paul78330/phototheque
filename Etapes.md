@@ -255,3 +255,11 @@ npx eslint .
 f) corriger les erreurs signalées :
 
     album_controller.js , index.js, cypress.config.js, test.cy.js
+
+A savoir :
+
+    - Si vous souhaitez rentrer dans le conteneur docker
+
+```
+docker run -it --entrypoint /bin/bash <nom_de_votre_image>
+```

@@ -37,7 +37,9 @@ services:
       - app
 
   cypress:
-    image: "cypress/browsers:node14.17.0-chrome88-ff89"
+    build:
+      context: .
+      dockerfile: Dockerfile.cypress
     depends_on:
       - app
       - db
@@ -56,5 +58,3 @@ services:
 networks:
   albums-app-network:
     external: true
-
-
