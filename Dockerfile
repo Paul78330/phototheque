@@ -13,7 +13,6 @@ RUN npm install --save-dev sinon
 
 # Installer ESLint et les plugins Jest et Cypress
 RUN npm install --save-dev eslint eslint-plugin-jest eslint-plugin-cypress
-RUN npm run lint
 
 # Copiez le reste du code de l'application
 COPY . .
