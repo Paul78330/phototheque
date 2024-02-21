@@ -10,7 +10,7 @@
     "test:unit": "jest --verbose",
     "start": "node index.js",
     "cypress:open": "cypress open",
-    "lint": "eslint . --ignore-pattern 'cypress/**'"
+    "lint": "eslint ."
     
   },
   "author": "",
