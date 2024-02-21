@@ -1,3 +1,10 @@
+# Utilise l'image Docker 'docker/compose:latest' pour exécuter les jobs de ce pipeline
+image: docker/compose:latest
+
+# Utilise le service 'docker:dind' (Docker in Docker) pour permettre l'exécution de Docker à l'intérieur des jobs
+services:
+  - docker:dind
+
 # Définit les étapes du pipeline
 stages:
   - build
