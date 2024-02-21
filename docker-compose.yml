@@ -51,7 +51,8 @@ services:
     command: npm run lint
     volumes:
       - .:/app
-      
+    working_dir: /app
+
 networks:
   albums-app-network:
     external: true
