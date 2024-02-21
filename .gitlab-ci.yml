@@ -1,14 +1,10 @@
-# Utilise l'image Docker 'docker/compose:latest' pour exécuter les jobs de ce pipeline
-image: docker/compose:latest
-
-# Utilise le service 'docker:dind' (Docker in Docker) pour permettre l'exécution de Docker à l'intérieur des jobs
-services:
-  - docker:dind
-
 # Définit les étapes du pipeline
 stages:
   - build
-  - test
+  - test_unitaire
+  - test_integration
+  - test_e2e
+  - test_QA
   - debug
 
 # Définit des variables d'environnement pour Docker
@@ -33,11 +29,12 @@ build:
     paths:
       - ./
 
+
 # Job 'tests_unitaires' pour exécuter les tests unitaires de l'application
 tests_unitaires:
-  stage: test
+  stage: test_unitaire
   script:
-    - docker-compose up --exit-code-from test
+    - docker-compose up test
   artifacts:
     reports:
       junit: test-results/resultat_tests.xml
@@ -47,7 +44,7 @@ tests_unitaires:
 
 # Job 'tests_integration' pour exécuter les tests d'intégration de l'application
 tests_integration:
-  stage: test
+  stage: test_integration
   script:
     - docker-compose up -d app
     - docker-compose run -T app npm run test:integration
@@ -61,13 +58,13 @@ tests_integration:
 
 # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
 tests_e2e:
-  stage: test
+  stage: test_e2e
   script:
     - DOCKERIZE_VERSION=v0.6.1 && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && chmod +x /usr/local/bin/dockerize && export PATH=$PATH:/usr/local/bin
     - docker-compose up -d app
     - dockerize -wait tcp://app:3000 -timeout 5m
     - docker-compose up cypress
-    - docker-compose down
+    # - docker-compose down
   artifacts:
     paths:
       - cypress/videos/*
@@ -76,7 +73,7 @@ tests_e2e:
     when: always
 
 test_QA:
-  stage: test
+  stage: test_QA
   script:
     - docker-compose run -T eslint
   artifacts:
@@ -85,18 +82,3 @@ test_QA:
     reports:
       junit: eslint-report.xml
     when: always
-
-# Job 'debug_job' pour afficher des informations de débogage
-debug_job:
-  image: cypress/included:13.6.4
-  stage: debug
-  script:
-    - echo "Debug information:"
-    - docker-compose config
-    - docker-compose ps
-    - docker-compose logs
-  # Exécute ce job uniquement sur les branches autres que 'master'
-  only:
-    - branches
-  except:
-    - master
