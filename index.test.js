@@ -11,10 +11,10 @@ mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((error) => console.error('Erreur de connexion à MongoDB:', error));
 
-let server;
+
 // Avant tous les tests, nous démarrons le serveur
 beforeAll(async () => {
-  server = await startServer();
+  await startServer();
 });
 
 // Après tous les tests, nous fermons le serveur et la connexion à MongoDB
@@ -63,10 +63,14 @@ beforeEach(async () => {
   idAlbum = album._id;
 });
 // Test de la route GET /album/:id
+// Test de la route GET /album/:id
 describe('GET /album/:id', () => {
-  it('should render the album page', () => {
-    return request(app)
+  it('should render the album page', async () => {
+    const res = await request(app)
       .get(`/album/${idAlbum}`)
       .expect(200);
+    
+    // Ajoute une assertion pour vérifier que le titre de l'album est présent dans le corps de la réponse
+    expect(res.text).toContain('Test Album');
   });
 });

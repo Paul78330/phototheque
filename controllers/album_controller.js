@@ -17,10 +17,8 @@ const createAlbumForm = (req, res) => {
 };
 
 const createAlbum = async (req, res) => {
-  let album;
-  
   try {
-    album = await Album.create({
+    await Album.create({
       title: req.body.albumTitle,
     });
   } catch (err) {

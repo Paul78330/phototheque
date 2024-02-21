@@ -206,3 +206,52 @@ docker-compose up --build app
 Si jamais votre build ne fonctionne pas, cela pourrais être du au poid de votre fichier, pour l'alléger, vous pouvez éditer un fichier .dockerignore
 
 ![1708287495232](image/Etapes/1708287495232.png)
+
+Si vous souhaitez arreter tous les processus docker encours
+
+```
+docker stop $(docker ps -a -q)
+```
+
+18 - test la qualité de notre code
+
+    a) installer ESLint : afin de pouvoir lister nos éxigeances
+
+```
+npm install eslint --save-dev
+# ou
+yarn add eslint --dev
+```
+
+ b) initialiser la configuration Eslint
+
+```
+npx eslint --init
+# ou
+yarn run eslint --init
+```
+
+c) afin de pouvoir tester également  tous les fichiers et également ceux de configurations, nous devons ajouter un certains nombre de plugins à eslint afin qu'il sache à quoi servent certaines variables dans notre code
+
+```
+npm install --save-dev eslint-plugin-cypress
+npm install --save-dev eslint-plugin-jest
+```
+
+d) Pour ESLint, vous pouvez spécifier les fichiers à analyser en ajoutant un script dans votre fichier `package.json` :
+
+```
+"scripts": {
+  "lint": "eslint ."
+}
+```
+
+e) analyser notre code
+
+```
+npx eslint .
+```
+
+f) corriger les erreurs signalées :
+
+    album_controller.js , index.js, cypress.config.js, test.cy.js

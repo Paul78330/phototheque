@@ -45,6 +45,15 @@ services:
       - ./:/e2e
     working_dir: /e2e
     command: /bin/bash -c "export CYPRESS_SERVER_URL=http://app:3000 && cypress verify && npx cypress run"
+
+  eslint:
+    build: .
+    command: npm run lint
+    volumes:
+      - .:/app
+      
 networks:
   albums-app-network:
     external: true
+
+

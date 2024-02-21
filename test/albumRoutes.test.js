@@ -32,8 +32,15 @@ beforeAll(async () => {
   server = app.listen(port);
 });
 
-afterAll((done) => {
-  server.close(done);
+afterAll(() => {
+  return new Promise((resolve, reject) => {
+    server.close((err) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve();
+    });
+  });
 });
 
 // Définition d'une suite de tests pour vos routes d'album
