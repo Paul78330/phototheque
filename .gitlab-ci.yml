@@ -63,6 +63,18 @@ tests_integration:
       - integration-test-results/resultat_tests_integration.xml
     when: always
 
+# Job 'test_QA' pour exécuter les tests de qualité de l'application avec ESLint
+test_QA:
+  stage: test_QA
+  script:
+    - docker-compose run -T eslint
+  artifacts:
+    paths:
+      - eslint-report.xml
+    reports:
+      junit: eslint-report.xml
+    when: always
+
 # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
 tests_e2e:
   stage: test_e2e
@@ -79,13 +91,3 @@ tests_e2e:
       - download/*
     when: always
 
-test_QA:
-  stage: test_QA
-  script:
-    - docker-compose run -T eslint
-  artifacts:
-    paths:
-      - eslint-report.xml
-    reports:
-      junit: eslint-report.xml
-    when: always
