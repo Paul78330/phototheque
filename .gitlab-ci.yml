@@ -71,6 +71,7 @@ test_QA:
   stage: test_QA
   script:
     - npm install eslint-plugin-cypress@latest --save-dev
+    - npm install --save-dev eslint-plugin-jest
     - docker-compose run -T eslint
   artifacts:
     paths:
@@ -78,7 +79,6 @@ test_QA:
     reports:
       junit: eslint-report.xml
     when: always
-
 # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
 tests_e2e:
   stage: test_e2e
