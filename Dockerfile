@@ -39,6 +39,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 # Copiez le reste du code de l'application
 COPY . .
 
+# Empaquetez l'application
+RUN npm pack
+
 # Exposez le port sur lequel votre application s'exécute
 EXPOSE 8080
 

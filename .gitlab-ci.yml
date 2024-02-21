@@ -10,8 +10,11 @@ stages:
   - build
   - test_unitaire
   - test_integration
-  - test_e2e
   - test_QA
+  - test_e2e
+  - deploy_staging
+  - test_iso_prod
+  - deploy_production
   - debug
 
 # Définit des variables d'environnement pour Docker
@@ -79,9 +82,9 @@ test_QA:
 tests_e2e:
   stage: test_e2e
   script:
-    - DOCKERIZE_VERSION=v0.6.1 && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && chmod +x /usr/local/bin/dockerize && export PATH=$PATH:/usr/local/bin
     - docker-compose up -d app
-    - dockerize -wait tcp://app:3000 -timeout 5m
+    - DOCKERIZE_VERSION=v0.6.1 && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && chmod +x /usr/local/bin/dockerize && export PATH=$PATH:/usr/local/bin
+    - dockerize -wait tcp://app:3000 -timeout 10m
     - docker-compose up cypress
     # - docker-compose down
   artifacts:
@@ -91,3 +94,32 @@ tests_e2e:
       - download/*
     when: always
 
+# Job 'deploy_staging' pour déployer l'application dans l'environnement de staging
+deploy_staging:
+  stage: deploy_staging
+  script:
+    - echo "Deploying to staging environment..."
+    - docker-compose -f docker-compose.staging.yml up -d
+  environment:
+    name: staging
+
+# Job 'test_iso_prod' pour exécuter des tests en iso-prod dans l'environnement de staging
+test_iso_prod:
+  stage: test_iso_prod
+  script:
+    - echo "Running iso-prod tests..."
+    - docker-compose -f docker-compose.staging.yml run -T app npm run test:iso-prod
+  dependencies:
+    - deploy_staging
+
+# Job 'deploy_production' pour déployer l'application dans l'environnement de production
+deploy_production:
+  stage: deploy_production
+  script:
+    - echo "Deploying to production environment..."
+    - docker-compose -f docker-compose.production.yml up -d
+  environment:
+    name: production
+  when: manual
+
+#Enfin, le job deploy_production est toujours déclenché manuellement. Cela signifie que vous devez aller dans GitLab et cliquer sur un bouton pour déclencher ce job. C'est une bonne pratique pour les déploiements en production, car cela vous donne un dernier point de contrôle avant de déployer.
