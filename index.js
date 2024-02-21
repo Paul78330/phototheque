@@ -2,7 +2,6 @@ const express = require("express");
 const session = require("express-session");
 //pour telecharger nos images
 const fileUpload = require("express-fileupload");
-const { get } = require("http");
 const mongoose = require("mongoose");
 const app = express();
 const path = require("path");

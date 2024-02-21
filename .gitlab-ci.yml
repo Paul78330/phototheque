@@ -72,6 +72,17 @@ tests_e2e:
       - download/*
     when: always
 
+test_QA:
+  stage: test
+  script:
+    - docker-compose run -T eslint
+  artifacts:
+    paths:
+      - eslint-report.xml
+    reports:
+      junit: eslint-report.xml
+    when: always
+
 # Job 'debug_job' pour afficher des informations de débogage
 debug_job:
   image: cypress/included:13.6.4

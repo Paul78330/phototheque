@@ -7,7 +7,7 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  Album.collection.createIndex({ "title": 1 }, function(err, res) {
+  Album.collection.createIndex({ "title": 1 }, function(err) {
     if (err) throw err;
     console.log("Index created on title");
     mongoose.connection.close();
