@@ -15,6 +15,9 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_CERT_PATH: ""
+  DOCKER_TLS_VERIFY: ""
 
 # Exécute 'docker info' avant chaque job pour afficher des informations sur l'environnement Docker
 before_script:
@@ -34,7 +37,7 @@ build:
 tests_unitaires:
   stage: test
   script:
-    - docker-compose up --build --exit-code-from test
+    - docker-compose up --exit-code-from test
   artifacts:
     reports:
       junit: test-results/resultat_tests.xml
@@ -97,16 +100,3 @@ debug_job:
     - branches
   except:
     - master
-
-# docker-compose down: Cette commande arrête et supprime les conteneurs, réseaux et volumes définis dans votre fichier docker-compose.yml.
-# artifacts: Ce sont les fichiers qui sont conservés après l'exécution de ce job.
-# paths: C'est la liste des chemins des fichiers à conserver. Ici, nous conservons les vidéos et les captures d'écran générées par Cypress lors de l'exécution des tests.
-# when: always: Cela signifie que les artefacts sont toujours conservés, même si le job échoue.
-# debug_job: C'est le nom du job dans votre pipeline GitLab CI/CD.
-# stage: debug: Cela signifie que ce job est exécuté pendant l'étape debug de votre pipeline.
-# script: Ce sont les commandes qui sont exécutées pour ce job.
-# echo "Debug information:": Cette commande affiche le texte "Debug information:" dans la sortie du job.
-# docker-compose config: Cette commande affiche votre configuration Docker Compose.
-# docker-compose ps: Cette commande affiche l'état des services définis dans votre fichier docker-compose.yml.
-# docker-compose logs: Cette commande affiche les logs des services définis dans votre fichier docker-compose.yml.
-# only et except: Ces deux clés définissent les règles pour déterminer quand ce job doit être exécuté. Ici, le job debug_job est exécuté uniquement sur les branches autres que master.
