@@ -70,6 +70,7 @@ tests_integration:
 test_QA:
   stage: test_QA
   script:
+    - npm install eslint-plugin-cypress@latest --save-dev
     - docker-compose run -T eslint
   artifacts:
     paths:
