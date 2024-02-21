@@ -44,8 +44,7 @@ services:
     volumes:
       - ./:/e2e
     working_dir: /e2e
-    command: /bin/bash -c "export CYPRESS_SERVER_URL=http://app:3000 && cypress verify && npx cypress run"
-
+    command: /bin/bash -c "./wait-for-mongodb.sh db:27017 && export CYPRESS_SERVER_URL=http://app:3000 && npm start && cypress verify && npx cypress run"
   eslint:
     build: .
     command: sh -c "npm run lint"

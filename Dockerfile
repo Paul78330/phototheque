@@ -25,6 +25,9 @@ RUN apt-get install -y xvfb libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libg
 # Installez Cypress
 RUN npm install cypress --save-dev
 
+# Ajoutez node_modules/.bin au PATH
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
 # Installez dockerize
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
