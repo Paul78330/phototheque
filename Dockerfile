@@ -1,11 +1,13 @@
-# Utilisez une image de base. Cela peut être n'importe quelle image contenant Node.js
+# Utilisez une image de base avec Node.js
 FROM node:14
 
 # Créez un répertoire pour l'application
 WORKDIR /usr/src/app
 
-# Installez les dépendances de l'application
+# Copiez package.json et package-lock.json (si disponible)
 COPY package*.json ./
+
+# Installez les dépendances de l'application
 RUN npm install
 
 # Ajoutez cette ligne pour installer sinon
@@ -13,9 +15,6 @@ RUN npm install --save-dev sinon
 
 # Installer ESLint et les plugins Jest et Cypress
 RUN npm install --save-dev eslint eslint-plugin-jest eslint-plugin-cypress
-
-# Copiez le reste du code de l'application
-COPY . .
 
 # Mettez à jour la liste des paquets
 RUN apt-get update
@@ -33,6 +32,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
   && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
   && chmod +x /usr/local/bin/dockerize \
   && echo $PATH
+
+# Copiez le reste du code de l'application
+COPY . .
 
 # Exposez le port sur lequel votre application s'exécute
 EXPOSE 8080
