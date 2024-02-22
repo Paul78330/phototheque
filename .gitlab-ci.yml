@@ -58,7 +58,6 @@ tests_integration:
   script:
     - docker-compose up -d app
     - docker-compose run -T app npm run test:integration
-    - docker-compose down
   artifacts:
     reports:
       junit: integration-test-results/resultat_tests_integration.xml
@@ -70,8 +69,6 @@ tests_integration:
 test_QA:
   stage: test_QA
   script:
-    - npm install eslint-plugin-cypress@latest --save-dev
-    - npm install --save-dev eslint-plugin-jest
     - docker-compose run -T eslint
   artifacts:
     paths:
@@ -84,8 +81,6 @@ tests_e2e:
   stage: test_e2e
   script:
     - docker-compose up -d app
-    - DOCKERIZE_VERSION=v0.6.1 && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && chmod +x /usr/local/bin/dockerize && export PATH=$PATH:/usr/local/bin
-    - dockerize -wait tcp://app:3000 -timeout 10m
     - docker-compose up cypress
     # - docker-compose down
   artifacts:

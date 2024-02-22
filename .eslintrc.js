@@ -5,12 +5,6 @@ module.exports = {
         "es2021": true, // Active toutes les fonctionnalités ECMAScript 2021.
         "jest": true // Active l'environnement Jest, qui définit les variables globales disponibles dans les tests Jest.
     },
-    // "extends" partage les paramètres à partir des configurations "parentes".
-    "extends": [
-        "eslint:recommended", // Utilise les règles recommandées par ESLint.
-        "plugin:cypress/recommended", // Utilise les règles recommandées par le plugin Cypress.
-        "plugin:jest/recommended" // Utilise les règles recommandées par le plugin Jest.
-    ],
     // "overrides" permet de spécifier la configuration pour des fichiers spécifiques.
     "overrides": [
         {

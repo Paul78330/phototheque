@@ -1,5 +1,5 @@
 describe('Test E2E de l\'application Album', () => {
-  const serverUrl = Cypress.env('CYPRESS_SERVER_URL') || 'http://localhost:3000';
+  const serverUrl = Cypress.env('SERVER_URL') || 'http://localhost:3000';
 
   before(() => {
     cy.request(serverUrl).then(response => {
@@ -28,6 +28,7 @@ describe('Test E2E de l\'application Album', () => {
     cy.visit(`${serverUrl}/album/create`);
     cy.get('input[name="albumTitle"]').type(albumTitle);
     cy.get('button[type="submit"]').click();
+    cy.wait(5000); // Attend 5 secondes
     cy.visit(`${serverUrl}/albums`);
     cy.get('a').contains(albumTitle).should('exist');
   });

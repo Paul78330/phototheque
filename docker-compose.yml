@@ -38,13 +38,18 @@ services:
 
   cypress:
     build: .
-    depends_on:
-      - app
+    command: /bin/bash -c "cypress verify && npx cypress run"
+    links:
       - db
     volumes:
       - ./:/e2e
     working_dir: /e2e
-    command: /bin/bash -c "./wait-for-mongodb.sh db:27017 && export CYPRESS_SERVER_URL=http://app:3000 && cypress verify && npx cypress run"
+    depends_on:
+      - db
+      - app
+    environment:
+      - CYPRESS_SERVER_URL=http://app:3000
+    
   eslint:
     build: .
     command: sh -c "npm run lint"
