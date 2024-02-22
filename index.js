@@ -14,9 +14,18 @@ const albumRoutes = require("./routes/albums_routes");
 
 //3 - connexion à notre bdd pour la création de notre collection "album"
 const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/phototheque';
-mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch((error) => console.error('Erreur de connexion à MongoDB:', error));
+
+const connectWithRetry = () => {
+  console.log('MongoDB connection with retry')
+  mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
+    console.log('MongoDB is connected')
+  }).catch(err=>{
+    console.log('MongoDB connection unsuccessful, retry after 5 seconds.')
+    setTimeout(connectWithRetry, 5 * 1000)
+  })
+}
+
+connectWithRetry();
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -80,4 +89,3 @@ if (require.main === module) {
 }
 
 module.exports = { app, startServer, stopServer };
-

@@ -1,34 +1,25 @@
-# Spécifie la version de Docker Compose à utiliser
 version: '3'
 
-# Définit les services de votre application
 services:
-  # Service pour votre application Node.js
   app:
-    # Utilise l'image Docker de votre application
     image: node_project-app
-    # Expose le port 8080 de votre application sur le port 8080 de l'hôte
     ports:
       - "8080:8080"
-    # Définit les variables d'environnement pour votre application
     environment:
-      # Indique à votre application qu'elle est en environnement de production
       - NODE_ENV=production
-      # URI de connexion à MongoDB
-      - MONGODB_URI=mongodb://mongo:27017/mydatabase
-    # Indique que le service 'app' dépend du service 'mongo'
+      - DATABASE_URL=mongodb://db:27017/mydatabase
     depends_on:
-      - mongo
+      - db
 
-  # Service pour MongoDB
-  mongo:
-    # Utilise l'image Docker officielle de MongoDB version 4.4
-    image: mongo:4.4
-    # Montage d'un volume pour persister les données de MongoDB
+  db:
+    image: mongo:latest
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 1m
+      timeout: 30s
+      retries: 30
     volumes:
       - mongodb_data:/data/db
 
-# Définition des volumes utilisés par les services
 volumes:
-  # Volume pour les données de MongoDB
   mongodb_data:

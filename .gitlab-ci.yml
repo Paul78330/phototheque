@@ -94,8 +94,10 @@ tests_e2e:
 deploy_staging:
   stage: deploy_staging
   script:
+    - echo "Removing existing containers..."
+    - docker-compose -p phototeque down || true
     - echo "Deploying to staging environment..."
-    - docker-compose -f docker-compose.staging.yml up -d
+    - docker-compose -p phototeque -f docker-compose.staging.yml up --build
   environment:
     name: staging
 

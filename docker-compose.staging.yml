@@ -1,41 +1,30 @@
-# Spécifie la version de Docker Compose à utiliser
 version: '3'
 
-# Définit les services de votre application
 services:
-  # Service pour votre application Node.js
   app:
-    # Utilise l'image Docker de votre application
-    image: node_project-app
-    # Expose le port 8080 de votre application sur le port 8080 de l'hôte
+    build: 
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
-    # Définit les variables d'environnement pour votre application
+      - "3000:3000"
     environment:
-      # Indique à votre application qu'elle est en environnement de staging
       - NODE_ENV=staging
-      # URI de connexion à MongoDB
-      - MONGODB_URI=mongodb://mongo:27017/phototheque
-    # Indique que le service 'app' dépend du service 'mongo'
+      - DATABASE_URL=mongodb://db:27017/phototheque
+    command: ["node", "index.js"]
     depends_on:
-      - mongo
+      - db
 
-  # Service pour MongoDB
-  mongo:
-    # Utilise l'image Docker officielle de MongoDB version 4.4
-    image: mongo:4.4
-    # Montage d'un volume pour persister les données de MongoDB
+  db:
+    image: mongo:latest
+    ports:
+    - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 1m
+      timeout: 30s
+      retries: 30
     volumes:
       - mongodb_data:/data/db
 
-# Définition des volumes utilisés par les services
 volumes:
-  # Volume pour les données de MongoDB
   mongodb_data:
-
-
-# #Dans cet exemple, le service app dépend du service mongo. Cela signifie que Docker Compose démarrera le service mongo avant le service app.
-
-# Le service app a une variable d'environnement MONGODB_URI qui pointe vers le service mongo. Notez que dans l'URI MongoDB, mongo est le nom du service MongoDB dans Docker Compose, et 27017 est le port par défaut de MongoDB.
-
-# Le service mongo utilise l'image mongo:4.4, qui est l'image officielle de MongoDB version 4.4. Il monte un volume mongodb_data sur /data/db, qui est le répertoire où MongoDB stocke ses données. Le volume mongodb_data est défini dans la section volumes à la fin du fichier.
