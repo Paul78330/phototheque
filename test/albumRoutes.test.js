@@ -41,7 +41,7 @@ afterAll(() => {
       resolve();
     });
   });
-});
+},10000);
 
 // Définition d'une suite de tests pour vos routes d'album
 describe("Album routes", () => {

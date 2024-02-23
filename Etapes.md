@@ -268,6 +268,54 @@ docker run -it --entrypoint /bin/bash <nom_de_votre_image>
 
 20 - Créer un fichier .eslintignore afin de ne pas intégrer les fichires qui sont dans le dossier cypress pour nos tests de qualité
 
+A savoir :
+
+    -	Comment inspecter tous les processus encours sur notre machine
+
+```
+netstat -tuln [vérifier le ports utilisée sur linux]
+netstat -ano [vérifier les ports utilisée pour windows]
+```
+
+- Pour savoir quel service utilise le port 3000, vous pouvez utiliser la commande `lsof` (List of Open Files) sur un système Unix/Linux ou la commande `netstat` sur Windows.
+
+  ```
+  lsof -i :3000 [linux]
+  netstat -ano | findstr :3000 [windows]
+  ```
+
+  - Pour arrêter le processus qui utilise le port 3000, vous pouvez utiliser la commande `kill` sur Unix/Linux ou la commande `taskkill` sur Windows.
+
+```
+kill -9 <PID> [linux]
+taskkill /PID <PID> /F [windows]
+```
+
+- pour arreter les conteneur docker-compose encours
+  - ```
+    docker-compose down
+    ```
+
+    - pour stopper toutes les images docker encours
+
+```
+docker stop $(docker ps -aq)
+```
+
+- pour supprimer les conteneurs existants
+  - ```
+    docker rm -f $(docker ps -aq)
+    ```
+
+    - pour supprimer tous les conteneur et réseaux inutilisés
+    - 
+
+```
+docker sytem prune -a
+docker network prune
+```
+
+
 21 - Après avoir édité nos tests d'intégration, nous pouvons maintenant commencer le CD
 
     1- installer mocha :
@@ -285,4 +333,4 @@ Voici quelques caractéristiques de Mocha :
 * **Hooks** : Mocha fournit des hooks comme `before`, `after`, `beforeEach` et `afterEach` qui peuvent être utilisés pour configurer les conditions avant et après les tests ou les suites de tests.
 * **Support de plusieurs interfaces** : Mocha supporte plusieurs interfaces de style de test comme BDD (Behaviour Driven Development), TDD (Test Driven Development), QUnit, etc.
 
-    2)	Ajouter le script "test_env" dans package.json afin de lancer nos test d'environnement
+  2) Ajouter le script "test_env" dans package.json afin de lancer nos test d'environnement

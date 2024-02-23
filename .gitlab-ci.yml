@@ -94,6 +94,8 @@ tests_e2e:
 deploy_staging:
   stage: deploy_staging
   script:
+    - echo "Stopping any running containers that are using ports 27017 and 3000..."
+    - docker stop $(docker ps -a -q --filter="expose=27017-27017" --filter="expose=3000-3000") || true
     - echo "Removing existing containers..."
     - docker-compose -p phototeque down || true
     - echo "Deploying to staging environment..."

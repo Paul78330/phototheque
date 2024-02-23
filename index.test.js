@@ -21,7 +21,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await stopServer();
   await mongoose.connection.close();
-});
+}, 10000);
 
 // Après chaque test, nous restaurons tous les stubs et les spies
 afterEach(() => {
