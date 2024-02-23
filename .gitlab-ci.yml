@@ -13,9 +13,7 @@ stages:
   - test_QA
   - test_e2e
   - deploy_staging
-  - test_iso_prod
   - deploy_production
-  - debug
 
 # Définit des variables d'environnement pour Docker
 variables:
@@ -39,7 +37,6 @@ build:
     paths:
       - ./
 
-
 # Job 'tests_unitaires' pour exécuter les tests unitaires de l'application
 tests_unitaires:
   stage: test_unitaire
@@ -58,6 +55,7 @@ tests_integration:
   script:
     - docker-compose up -d app
     - docker-compose run -T app npm run test:integration
+    - docker-compose down
   artifacts:
     reports:
       junit: integration-test-results/resultat_tests_integration.xml
@@ -76,13 +74,14 @@ test_QA:
     reports:
       junit: eslint-report.xml
     when: always
+
 # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
 tests_e2e:
   stage: test_e2e
   script:
     - docker-compose up -d app
     - docker-compose up cypress
-    # - docker-compose down
+    - docker-compose down
   artifacts:
     paths:
       - cypress/videos/*
@@ -90,6 +89,7 @@ tests_e2e:
       - download/*
     when: always
 
+# Job 'deploy_staging' pour déployer l'application dans l'environnement de staging
 # Job 'deploy_staging' pour déployer l'application dans l'environnement de staging
 deploy_staging:
   stage: deploy_staging
@@ -99,18 +99,13 @@ deploy_staging:
     - echo "Removing existing containers..."
     - docker-compose -p phototeque down || true
     - echo "Deploying to staging environment..."
-    - docker-compose -p phototeque -f docker-compose.staging.yml up --build
+    - docker-compose -p phototeque -f docker-compose.staging.yml up --build -d
+    - echo "Running iso-prod tests..."
+    - docker-compose -f docker-compose.staging.yml run -T app npm run test:iso-prod
+    - docker-compose -f docker-compose.staging.yml down
   environment:
     name: staging
 
-# Job 'test_iso_prod' pour exécuter des tests en iso-prod dans l'environnement de staging
-test_iso_prod:
-  stage: test_iso_prod
-  script:
-    - echo "Running iso-prod tests..."
-    - docker-compose -f docker-compose.staging.yml run -T app npm run test:iso-prod
-  dependencies:
-    - deploy_staging
 
 # Job 'deploy_production' pour déployer l'application dans l'environnement de production
 deploy_production:
