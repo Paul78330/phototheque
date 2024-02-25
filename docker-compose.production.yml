@@ -1,25 +1,38 @@
 version: '3'
-
 services:
   app:
-    image: node_project-app
+    build:
+      context: .
+      dockerfile: Dockerfile.staging
     ports:
-      - "8080:8080"
+      - "3000:3000"
     environment:
-      - NODE_ENV=production
       - DATABASE_URL=mongodb://db:27017/phototheque
+      - NODE_ENV=production
     depends_on:
       - db
-
   db:
     image: mongo:latest
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 1m
-      timeout: 30s
-      retries: 30
-    volumes:
-      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
 
-volumes:
-  mongodb_data:
+  cypress:
+    build: .
+    command: /bin/bash -c "cypress verify && npx cypress run"
+    links:
+      - db
+    volumes:
+      - ./:/e2e
+    working_dir: /e2e
+    depends_on:
+      - db
+      - app
+    environment:
+      - CYPRESS_SERVER_URL=http://app:3000
+    
+  eslint:
+    build: .
+    command: sh -c "npm run lint"
+    volumes:
+      - .:/app
+    working_dir: /app
