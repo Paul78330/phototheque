@@ -4,8 +4,6 @@ services:
     build: .
     ports:
       - "3000:3000"
-    links:
-      - db
     environment:
       - DATABASE_URL=mongodb://db:27017/phototheque
     command: ["node", "index.js"]

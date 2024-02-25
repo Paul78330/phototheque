@@ -1,0 +1,26 @@
+# Utilise l'image officielle de Node.js
+FROM node:14
+
+# Crée un répertoire pour l'application dans le conteneur
+WORKDIR /usr/src/app
+
+# Copie le fichier package.json et package-lock.json dans le répertoire de l'application
+COPY package*.json ./
+
+# Installe les dépendances de l'application
+RUN npm install
+
+# Copiez le script wait-for-it.sh dans le conteneur
+COPY wait-for-it.sh /usr/src/app/wait-for-it.sh
+
+# Rendez le script exécutable
+RUN chmod +x /usr/src/app/wait-for-it.sh
+
+# Copie le reste du code de l'application dans le répertoire de l'application
+COPY . .
+
+# Expose le port que votre application utilise
+EXPOSE 8080
+
+# Définit la commande pour démarrer votre application
+CMD [ "node", "index.js" ]

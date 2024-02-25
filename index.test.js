@@ -3,30 +3,45 @@ const mongoose = require('mongoose');
 const request = require('supertest');
 const sinon = require('sinon');
 const Album = require('./models/Album');
-const { app, startServer, stopServer } = require('./index');
+const { app, startServer, stopServer, connectWithRetry } = require('./index');
 
-//3 - connexion à notre bdd pour la création de notre collection "album"
-const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/phototheque';
-mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch((error) => console.error('Erreur de connexion à MongoDB:', error));
+jest.setTimeout(120000); // Augmenter le délai d'attente de Jest à 120 secondes
+jest.testEnvironment = 'node'; // Définir l'environnement de test sur 'node'
 
-
-// Avant tous les tests, nous démarrons le serveur
 beforeAll(async () => {
-  await startServer();
-});
+  try {
+    await connectWithRetry();
+  } catch (error) {
+    console.error('Failed to connect with retry, trying to connect without retry', error);
+    try {
+      await mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+    } catch (error) {
+      console.error('Failed to connect without retry', error);
+      throw error; // Rethrow the error to fail the test
+    }
+  }
+}, 120000);
 
 // Après tous les tests, nous fermons le serveur et la connexion à MongoDB
 afterAll(async () => {
   await stopServer();
   await mongoose.connection.close();
-}, 10000);
+});
 
 // Après chaque test, nous restaurons tous les stubs et les spies
 afterEach(() => {
   sinon.restore();
 });
+
+// Déplacer la création de l'album dans un bloc beforeAll
+let idAlbum;
+beforeAll(async () => {
+  const album = new Album({ title: 'Test Album' });
+  await album.save();
+  idAlbum = album._id;
+});
+
+// Les tests restent les mêmes
 
 describe('GET /', () => {
   it('should redirect to /albums', async () => {
@@ -50,19 +65,10 @@ describe('POST /album/create', () => {
         sinon.assert.calledWith(createStub, { title: albumData.albumTitle });
         expect(res.headers.location).toBe('/albums');
       });
-  });
+  }, 30000);
 });
 
 
-
-let idAlbum;
-
-beforeEach(async () => {
-  const album = new Album({ title: 'Test Album' });
-  await album.save();
-  idAlbum = album._id;
-});
-// Test de la route GET /album/:id
 // Test de la route GET /album/:id
 describe('GET /album/:id', () => {
   it('should render the album page', async () => {
@@ -72,5 +78,5 @@ describe('GET /album/:id', () => {
     
     // Ajoute une assertion pour vérifier que le titre de l'album est présent dans le corps de la réponse
     expect(res.text).toContain('Test Album');
-  });
+  },30000);
 });

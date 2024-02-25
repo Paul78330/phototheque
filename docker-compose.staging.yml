@@ -1,36 +1,30 @@
 version: '3'
-
 services:
   app:
-    build: 
+    build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.staging
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=staging
       - DATABASE_URL=mongodb://db:27017/phototheque
-    command: ["node", "index.js"]
     depends_on:
       - db
-    networks:
-      - staging
-
   db:
     image: mongo:latest
     ports:
-    - "27018:27017"
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 1m
-      timeout: 30s
-      retries: 30
+      - "27017:27017"
+
+  test:
+    build: .
+    command: sh -c "npm test --detectOpenHandles --reporters=default --reporters=jest-junit"
+    links:
+      - db
+    environment:
+      - DATABASE_URL=mongodb://db:27017/phototheque
     volumes:
-      - mongodb_data:/data/db
-
-volumes:
-  mongodb_data:
-
-networks:
-  staging:
-    driver: bridge
+      - .:/app
+      - ./test-results:/app/test-results
+    depends_on:
+      - db
+      - app

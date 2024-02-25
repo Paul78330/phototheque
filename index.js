@@ -13,15 +13,26 @@ const flash = require("connect-flash");
 const albumRoutes = require("./routes/albums_routes");
 
 //3 - connexion à notre bdd pour la création de notre collection "album"
-const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/phototheque';
+const DATABASE_URL = process.env.DATABASE_URL || "mongodb://localhost:27017/phototheque";
+let retryCount = 0;
+const maxRetryCount = 10;
 
 const connectWithRetry = () => {
-  console.log('MongoDB connection with retry')
+  console.log('Tentative de connexion à MongoDB')
   mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
-    console.log('MongoDB is connected')
+    console.log('MongoDB est connecté')
+    console.log(DATABASE_URL);
   }).catch(err=>{
-    console.log('MongoDB connection unsuccessful, retry after 5 seconds.')
-    setTimeout(connectWithRetry, 5 * 1000)
+    console.log('La connexion à MongoDB a échoué, nouvelle tentative dans 10 secondes.')
+    console.log(DATABASE_URL);
+    if (retryCount < maxRetryCount) {
+      setTimeout(() => {
+        retryCount++;
+        connectWithRetry();
+      }, 10 * 1000);
+    } else {
+      console.log('La connexion à MongoDB a échoué après 10 tentatives, arrêt des tentatives de reconnexion.')
+    }
   })
 }
 
@@ -88,4 +99,4 @@ if (require.main === module) {
   startServer();
 }
 
-module.exports = { app, startServer, stopServer };
+module.exports = { app, startServer, stopServer, connectWithRetry };

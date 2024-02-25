@@ -7,89 +7,88 @@ services:
 
 # Définit les étapes du pipeline
 stages:
-  # - build
-  # - test_unitaire
-  # - test_integration
-  # - test_QA
-  # - test_e2e
+  - build
+  - test_unitaire
+  - test_integration
+  - test_QA
+  - test_e2e
   - deploy_staging
   - deploy_production
 
-# # Définit des variables d'environnement pour Docker
-# variables:
-#   DOCKER_DRIVER: overlay2
-#   DOCKER_TLS_CERTDIR: ""
-#   DOCKER_HOST: tcp://docker:2375/
-#   DOCKER_CERT_PATH: ""
-#   DOCKER_TLS_VERIFY: ""
+# Définit des variables d'environnement pour Docker
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_CERT_PATH: ""
+  DOCKER_TLS_VERIFY: ""
 
-# # Exécute 'docker info' avant chaque job pour afficher des informations sur l'environnement Docker
-# before_script:
-#   - docker info
+# Exécute 'docker info' avant chaque job pour afficher des informations sur l'environnement Docker
+before_script:
+  - docker info
 
-# # Job 'build' pour construire les images Docker de l'application
-# build:
-#   stage: build
-#   script:
-#     - docker-compose build
-#   # Conserve l'ensemble du répertoire de travail comme artefact pour les jobs suivants
-#   artifacts:
-#     paths:
-#       - ./
+# Job 'build' pour construire les images Docker de l'application
+build:
+  stage: build
+  script:
+    - docker-compose build
+  # Conserve l'ensemble du répertoire de travail comme artefact pour les jobs suivants
+  artifacts:
+    paths:
+      - ./
 
-# # Job 'tests_unitaires' pour exécuter les tests unitaires de l'application
-# tests_unitaires:
-#   stage: test_unitaire
-#   script:
-#     - docker-compose up test
-#   artifacts:
-#     reports:
-#       junit: test-results/resultat_tests.xml
-#     paths:
-#       - test-results/resultat_tests.xml
-#     when: always
+# Job 'tests_unitaires' pour exécuter les tests unitaires de l'application
+tests_unitaires:
+  stage: test_unitaire
+  script:
+    - docker-compose up test
+  artifacts:
+    reports:
+      junit: test-results/resultat_tests.xml
+    paths:
+      - test-results/resultat_tests.xml
+    when: always
 
-# # Job 'tests_integration' pour exécuter les tests d'intégration de l'application
-# tests_integration:
-#   stage: test_integration
-#   script:
-#     - docker-compose up -d app
-#     - docker-compose run -T app npm run test:integration
-#     - docker-compose down
-#   artifacts:
-#     reports:
-#       junit: integration-test-results/resultat_tests_integration.xml
-#     paths:
-#       - integration-test-results/resultat_tests_integration.xml
-#     when: always
+# Job 'tests_integration' pour exécuter les tests d'intégration de l'application
+tests_integration:
+  stage: test_integration
+  script:
+    - docker-compose up -d app
+    - docker-compose run -T app npm run test:integration
+    - docker-compose down
+  artifacts:
+    reports:
+      junit: integration-test-results/resultat_tests_integration.xml
+    paths:
+      - integration-test-results/resultat_tests_integration.xml
+    when: always
 
-# # Job 'test_QA' pour exécuter les tests de qualité de l'application avec ESLint
-# test_QA:
-#   stage: test_QA
-#   script:
-#     - docker-compose run -T eslint
-#   artifacts:
-#     paths:
-#       - eslint-report.xml
-#     reports:
-#       junit: eslint-report.xml
-#     when: always
+# Job 'test_QA' pour exécuter les tests de qualité de l'application avec ESLint
+test_QA:
+  stage: test_QA
+  script:
+    - docker-compose run -T eslint
+  artifacts:
+    paths:
+      - eslint-report.xml
+    reports:
+      junit: eslint-report.xml
+    when: always
 
-# # Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
-# tests_e2e:
-#   stage: test_e2e
-#   script:
-#     - docker-compose up -d app
-#     - docker-compose up cypress
-#     - docker-compose down
-#   artifacts:
-#     paths:
-#       - cypress/videos/*
-#       - cypress/screenshots/*
-#       - download/*
-#     when: always
+# Job 'tests_e2e' pour exécuter les tests end-to-end (e2e) avec Cypress
+tests_e2e:
+  stage: test_e2e
+  script:
+    - docker-compose up -d app
+    - docker-compose up cypress
+    - docker-compose down
+  artifacts:
+    paths:
+      - cypress/videos/*
+      - cypress/screenshots/*
+      - download/*
+    when: always
 
-# Job 'deploy_staging' pour déployer l'application dans l'environnement de staging
 # Job 'deploy_staging' pour déployer l'application dans l'environnement de staging
 deploy_staging:
   stage: deploy_staging
@@ -97,11 +96,11 @@ deploy_staging:
     - echo "Stopping any running containers that are using ports 27017 and 3000..."
     - docker stop $(docker ps -a -q --filter="expose=27017-27017" --filter="expose=3000-3000") || true
     - echo "Removing existing containers..."
-    - docker-compose -p phototeque down || true
+    - docker-compose down || true
     - echo "Deploying to staging environment..."
-    - docker-compose -p phototeque -f docker-compose.staging.yml up --build -d
+    - docker-compose -f docker-compose.staging.yml up --build -d
     - echo "Running iso-prod tests..."
-    - docker-compose -f docker-compose.staging.yml run -T app npm run test:iso-prod
+    - docker-compose -f docker-compose.staging.yml npm run test:iso-prod
     - docker-compose -f docker-compose.staging.yml down
   environment:
     name: staging
