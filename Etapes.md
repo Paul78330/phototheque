@@ -315,22 +315,12 @@ docker sytem prune -a
 docker network prune
 ```
 
-
 21 - Après avoir édité nos tests d'intégration, nous pouvons maintenant commencer le CD
 
-    1- installer mocha :
+    1- Editer des insfrastructures de staging et de production
 
-```
-npm install --save-dev mocha
-```
+    -	docker-compose.staging.yml et docker-compose.production.yml
 
-Mocha est un framework de test populaire pour Node.js. Il est utilisé pour tester des applications synchrones et asynchrones pour s'assurer qu'elles fonctionnent comme prévu.
+    2-	Editer un Dockerfile.staging pour ses environnement
 
-Voici quelques caractéristiques de Mocha :
-
-* **Tests asynchrones** : Mocha a un excellent support pour les tests asynchrones, ce qui est crucial pour tester les applications Node.js qui sont fortement basées sur des opérations asynchrones comme la lecture de fichiers ou les requêtes HTTP.
-* **Rapports flexibles** : Mocha a un système de rapport flexible qui peut être personnalisé avec des reporters supplémentaires. Il peut générer des rapports dans différents formats comme le HTML, le JSON, etc.
-* **Hooks** : Mocha fournit des hooks comme `before`, `after`, `beforeEach` et `afterEach` qui peuvent être utilisés pour configurer les conditions avant et après les tests ou les suites de tests.
-* **Support de plusieurs interfaces** : Mocha supporte plusieurs interfaces de style de test comme BDD (Behaviour Driven Development), TDD (Test Driven Development), QUnit, etc.
-
-  2) Ajouter le script "test_env" dans package.json afin de lancer nos test d'environnement
+    3-	Mettre à jour le fichier .gitlab-ci.yml
