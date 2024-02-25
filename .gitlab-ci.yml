@@ -93,14 +93,10 @@ tests_e2e:
 deploy_staging:
   stage: deploy_staging
   script:
-    - echo "Stopping any running containers that are using ports 27017 and 3000..."
-    - docker stop $(docker ps -a -q --filter="expose=27017-27017" --filter="expose=3000-3000") || true
-    - echo "Removing existing containers..."
-    - docker-compose down || true
     - echo "Deploying to staging environment..."
     - docker-compose -f docker-compose.staging.yml up --build -d
-    - echo "Running iso-prod tests..."
-    - docker-compose -f docker-compose.staging.yml npm run test:iso-prod
+    - echo "Running tests in staging environment..."
+    - docker-compose --env-file .env.staging -f docker-compose.staging.yml up test
     - docker-compose -f docker-compose.staging.yml down
   environment:
     name: staging

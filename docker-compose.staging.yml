@@ -8,6 +8,7 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=mongodb://db:27017/phototheque
+      - NODE_ENV=staging
     depends_on:
       - db
   db:
